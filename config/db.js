@@ -6,7 +6,11 @@ const pool = new Pool({
   ssl: {
     require: true,
     rejectUnauthorized: false,
-  }
+  },
 });
+
+pool.connect()
+  .then(() => console.log("✅ PostgreSQL Connected (SSL Enabled)"))
+  .catch(err => console.error("❌ DB Connection Error:", err.message));
 
 export default pool;
