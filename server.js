@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import contactRoutes from "./routes/contactRoutes.js";
+
 dotenv.config();
 
 // ⭐ Use your dedicated DB file (THIS FIXES SSL ISSUE)
@@ -437,7 +439,6 @@ app.delete("/api/admin/team/:id", requireAdmin, async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
-
 //  ADMIN LOGIN
 app.post("/api/admin/login", (req, res) => {
   const { password } = req.body;
@@ -449,7 +450,11 @@ app.post("/api/admin/login", (req, res) => {
   res.json({ token: process.env.ADMIN_TOKEN });
 });
 
-// START SERVER
+// ⭐ MOVE THIS ABOVE app.listen()
+app.use("/api/contact", contactRoutes);
+
+// ⭐ KEEP LISTEN AT LAST ALWAYS
 app.listen(process.env.PORT || 5000, () => {
   console.log(`API Running on PORT ${process.env.PORT || 5000}`);
 });
+
