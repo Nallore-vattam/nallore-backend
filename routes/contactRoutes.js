@@ -47,13 +47,21 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
-   // MARK MESSAGE AS READ
-app.put("/api/contact/read/:id", async (req, res) => {
+
+// Mark ALL messages as read
+router.put("/mark-all-read", async (req, res) => {
   try {
-    await Contact.update({ is_read: true }, { where: { id: req.params.id } });
-    res.json({ success: true });
+    const now = new Date();
+
+    await pool.query(
+      "UPDATE contact_messages SET is_read = true, read_at = $1 WHERE is_read = false",
+      [now]
+    );
+
+    res.json({ success: true, read_at: now });
   } catch (err) {
-    res.status(500).json({ error: "Failed to update read status" });
+    console.error("Mark all read failed:", err);
+    res.status(500).json({ success: false });
   }
 });
 
