@@ -47,5 +47,14 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+   // MARK MESSAGE AS READ
+app.put("/api/contact/read/:id", async (req, res) => {
+  try {
+    await Contact.update({ is_read: true }, { where: { id: req.params.id } });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update read status" });
+  }
+});
 
 export default router;
